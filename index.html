@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <title>Snapchat Login Kit Test</title>
+        <link rel="stylesheet" href="normalize.css">
+        <link rel="stylesheet" href="skeleton.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script>
+            window.snapKitInit = function() {
+                snap.loginkit.mountButton("login", {
+                    clientId: "67480b82-04bd-4091-9c6f-612e362de816",
+                    redirectURI: "http://localhost:5000",
+                    scopeList: [
+                        "user.display_name",
+                        "user.bitmoji.avatar",
+                        "user.external_id"
+                    ],
+                    handleResponseCallback: function() {
+                        snap.loginkit.fetchUserInfo().then(function(r) {
+                            document.getElementById("display_name").innerText = r.data.me.displayName;
+                            document.getElementById("bitmoji").src = r.data.me.bitmoji.avatar;
+                            document.getElementById("external_id").innerText = r.data.me.externalId;
+                            document.getElementById("login").style.display = "none";
+                        });
+                    }
+                });
+            };
+            (function (d, s, id) {
+                var js, sjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) return;
+                js = d.createElement(s);
+                js.id = id;
+                js.src = "https://sdk.snapkit.com/js/v1/login.js";
+                sjs.parentNode.insertBefore(js, sjs);
+            })(document, "script", "loginkit-sdk");
+        </script>
+    </head>
+    <body class="container">
+        <div class="row"><img class="offset-by-four four columns" id="bitmoji" /></div>
+        <div class="row"><div class="offset-by-four four columns" id="display_name"></div></div>
+        <div class="row"><div class="offset-by-four four columns" id="external_id" style="display: none"></div></div>
+        <div class="row"><div class="u-full-width" id="login"></div></div>
+    </body>
+</html>
